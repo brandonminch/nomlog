@@ -1,14 +1,17 @@
 import type { NextConfig } from "next";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+const appRoot = path.dirname(fileURLToPath(import.meta.url));
+// pnpm hoisted monorepo: Turbopack must resolve `next` from the workspace root, not `src/app`.
+// See https://github.com/vercel/next.js/issues/92540
+const monorepoRoot = path.resolve(appRoot, "..");
 
 const nextConfig: NextConfig = {
-  // Monorepo root uses pnpm; pin Turbopack root to this app so resolution stays local.
   turbopack: {
-    root: projectRoot,
+    root: monorepoRoot,
   },
+  outputFileTracingRoot: monorepoRoot,
 };
 
 export default nextConfig;

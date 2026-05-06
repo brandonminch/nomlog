@@ -39,7 +39,7 @@ export function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border px-2 py-3">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 rounded-md px-2 py-1 font-semibold text-sidebar-foreground outline-hidden ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2"
+          className="font-heading flex items-center gap-2 rounded-md px-2 py-1 text-base font-semibold tracking-tight text-sidebar-foreground outline-hidden ring-sidebar-ring transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2"
         >
           <span className="truncate">Nomlog Admin</span>
         </Link>

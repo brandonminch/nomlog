@@ -1,5 +1,6 @@
 import Link from "next/link"
 
+import { PageHeader } from "@/components/admin/page-header"
 import { createClient } from "@/lib/supabase/server"
 import {
   Table,
@@ -22,8 +23,8 @@ export default async function RecipesListPage() {
 
   if (error) {
     return (
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Recipes</h1>
+      <div className="space-y-3">
+        <PageHeader title="Recipes" />
         <p className="text-destructive text-sm">
           Failed to load recipes: {error.message}
         </p>
@@ -34,15 +35,12 @@ export default async function RecipesListPage() {
   const rows = data ?? []
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Recipes</h1>
-        <p className="text-muted-foreground text-sm">
-          {rows.length} recipe{rows.length === 1 ? "" : "s"} (max 1000 shown).
-          Select a row to edit.
-        </p>
-      </div>
-      <div className="rounded-md border">
+    <div className="space-y-6">
+      <PageHeader
+        title="Recipes"
+        description={`${rows.length} recipe${rows.length === 1 ? "" : "s"} (max 1000 shown). Select a row to edit.`}
+      />
+      <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

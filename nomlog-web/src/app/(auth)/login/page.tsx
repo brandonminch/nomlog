@@ -1,17 +1,20 @@
 import { Suspense } from "react"
 
 import { LoginForm } from "@/components/auth/login-form"
+import { AuthScreen } from "@/components/layout/auth-screen"
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-full flex-1 flex-col items-center justify-center p-6">
+    <AuthScreen>
       <Suspense
         fallback={
-          <p className="text-muted-foreground text-sm">Loading sign-in…</p>
+          <p className="text-muted-foreground animate-pulse text-center text-sm">
+            Loading sign-in…
+          </p>
         }
       >
         <LoginForm />
       </Suspense>
-    </div>
+    </AuthScreen>
   )
 }

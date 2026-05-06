@@ -123,7 +123,9 @@ export function RecipeAdminEditor({
           <ArrowLeft className="mr-1 size-4" />
           All recipes
         </Link>
-        <h1 className="text-2xl font-semibold tracking-tight">Edit recipe</h1>
+        <h1 className="font-heading text-2xl font-semibold tracking-tight">
+          Edit recipe
+        </h1>
       </div>
 
       {message ? (

@@ -44,7 +44,7 @@ export function DashboardShell({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+        <header className="bg-background/80 supports-[backdrop-filter]:backdrop-blur-md flex h-14 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-6" />
           <span className="text-muted-foreground hidden truncate text-sm sm:inline md:max-w-[12rem] lg:max-w-xs">
