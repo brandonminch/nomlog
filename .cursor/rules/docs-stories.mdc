@@ -1,0 +1,27 @@
+---
+description: Keep feature docs and user-story docs structured and separate
+globs: docs/**/*.md
+alwaysApply: false
+---
+
+# Docs: Features vs User Stories
+
+- **Feature docs live in** `docs/features/*.md` and must describe **current, implemented behavior** only.
+  - Don’t add future work, ideas, or “tickets” to feature files.
+  - When a feature changes, update the corresponding `docs/features/*.md` doc.
+
+- **User stories live in** `docs/stories/*.md` and represent **future or in-progress work**.
+  - Create story files **on demand**, only when there is future work for that feature (e.g. `docs/stories/meal-logging.md`).
+  - Use the canonical template from `docs/stories/README.md`:
+    - `## <ID>: <Short title>`
+    - YAML-style metadata block with `id`, `status`, `priority`, `type`, `feature`, `links`
+    - “As a / I want / So that” plus Acceptance criteria, optional Notes and Test cases.
+
+- **Stories index**:
+  - `docs/stories/README.md` should only list story files that actually exist on disk.
+  - When you create a new `docs/stories/<feature>.md`, add it to the table in that README.
+
+- **Linking**:
+  - From roadmap docs, link to `docs/stories/README.md` or specific story files when you break roadmap items into implementation-ready stories.
+  - From stories, use the `links` field to reference related feature docs, roadmap sections, and ADRs.
+

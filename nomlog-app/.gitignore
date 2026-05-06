@@ -1,0 +1,51 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+# ios/ is committed for Xcode Cloud; regenerate with `yarn prebuild` after native config changes.
+android/
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# package managers
+package-lock.json
+npm-shrinkwrap.json
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env
+.env.development
+.env.production
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+app-example
+
+.env.local
+
+# Sentry native build / EAS local — contains SENTRY_AUTH_TOKEN (never commit)
+.env.sentry-build-plugin

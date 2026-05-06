@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*
+!.env.example
+!.env.development.example
+!.env.production.example
+supabase/.temp/
+.DS_Store
+*.log
+.yarn/
+.yarnrc.yml
+
+# Curated recipe pipeline — intermediate files (DB is source of truth)
+src/data/recipes/curated/*.json
+src/data/recipes/curated/*.raw.json

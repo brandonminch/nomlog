@@ -1,0 +1,163 @@
+/* Nomlog Design System — Colors & Type
+ * Extracted directly from brandonminch/nomlog-app (React Native + Expo).
+ * Color values lifted verbatim from RN StyleSheets so previews render identically to device.
+ */
+
+:root {
+  /* ---------- Brand ---------- */
+  --brand-purple: #9810fa;        /* Primary brand — pills, badges, links, accents */
+  --brand-purple-deep: #7c3aed;   /* Pressed / link-tinted text */
+  --brand-blue: #155dfc;          /* Right side of primary CTA gradient */
+  --brand-grad-start: #9810fa;
+  --brand-grad-end:   #155dfc;
+  --brand-purple-50:  #faf5ff;    /* "View recipe" surface */
+  --brand-purple-100: #f3e8ff;    /* Favorite badge surface */
+  --brand-purple-200: #e9d5ff;    /* Recipe button border, fat-icon bg */
+  --brand-purple-300: #d8b4fe;    /* Switch track-on */
+  --brand-purple-400: #dab2ff;    /* Planned card dashed border */
+
+  /* Auth / splash */
+  --auth-bg: #1f004b;             /* Dark royal purple — AuthScreen background */
+  --auth-cta: #09bdb8;            /* Teal email-login CTA */
+  --auth-cta-secondary: #3b82f6;  /* Google blue */
+  --auth-input: #2a2a2a;          /* Text-field surface on auth */
+  --auth-input-border: #4a4a4a;
+  --auth-placeholder: #a0a0a0;
+
+  /* ---------- Neutrals (ink scale) ---------- */
+  --ink-1000: #000000;            /* True black — FAB, avatar, send button */
+  --ink-900:  #101828;            /* Primary text / heading */
+  --ink-700:  #111827;            /* Heading variant (group titles) */
+  --ink-600:  #364153;            /* Secondary text */
+  --ink-500:  #4a5565;            /* Body text */
+  --ink-400:  #4b5563;            /* Planned macro text */
+  --ink-350:  #6a7282;            /* Muted label / time */
+  --ink-300:  #6b7280;            /* Tab inactive / day name */
+  --ink-250:  #99a1af;            /* Calorie placeholder */
+  --ink-200:  #9ca3af;            /* Chevron / hint */
+
+  /* Surfaces & borders */
+  --surface-0:   #ffffff;         /* Card */
+  --surface-50:  #fafafa;
+  --surface-100: #f9fafb;         /* Section card / muted surface */
+  --surface-150: #f8f9fb;         /* Attachment strip */
+  --surface-200: #f3f4f6;         /* Plus button / subtle divider fill */
+  --surface-250: #f0f2f5;         /* Attachment strip border */
+  --border-100:  #f3f4f6;         /* Hairline divider */
+  --border-200:  #e5e7eb;         /* Default border */
+  --border-300:  #d1d5dc;         /* Disabled */
+
+  /* ---------- Macro semantic ---------- */
+  --macro-protein:        #dc2626;
+  --macro-protein-bg:     #ffe2e2;
+  --macro-carbs:          #ca8a04;
+  --macro-carbs-strong:   #eab308;   /* Used in MacroBarChart */
+  --macro-carbs-bg:       #fef9c2;
+  --macro-fat:            #9810fa;
+  --macro-fat-bg:         #e9d5ff;
+  --macro-fat-bg-soft:    #f3e8ff;
+
+  /* Meal-type accents (from MealGroupCard) */
+  --meal-breakfast:    #ff6b35;
+  --meal-breakfast-bg: #fff4e6;
+  --meal-lunch:        #f59e0b;
+  --meal-lunch-bg:     #fef3c7;
+  --meal-dinner:       #4f46e5;
+  --meal-dinner-bg:    #e0e7ff;
+  --meal-snack:        #16a34a;
+  --meal-snack-bg:     #dcfcee;
+  --meal-default:      #6b7280;
+  --meal-default-bg:   #e5e7eb;
+
+  /* ---------- Status ---------- */
+  --status-danger:        #e7000b;     /* Logout text */
+  --status-danger-border: #ffc9c9;     /* Logout outline */
+  --status-info-bg:       #f0f9ff;     /* Refining badge bg */
+  --status-info-fg:       #6366f1;
+  --status-badge-bg:      #eef2ff;     /* Item-count chip bg */
+  --status-badge-fg:      #4f46e5;
+
+  /* ---------- Type ---------- */
+  /* Nomlog uses the platform default sans on iOS/Android (no custom font in package.json).
+     San Francisco on iOS, Roboto on Android. We approximate with system stack on web. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+               "Helvetica Neue", Roboto, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold: 600;
+  --weight-bold:    700;
+
+  /* Type scale (px) — mirrors RN StyleSheet fontSize tokens used across the app */
+  --fs-xxs:  10;  /* PLANNED pill (with letterSpacing 0.12) */
+  --fs-xs:   11;  /* status pills, day-of-week */
+  --fs-sm:   12;  /* time, calorie suffix, macro label */
+  --fs-md:   13;  /* Apple-Health subtitle, item description */
+  --fs-base: 14;  /* body, description */
+  --fs-lg:   15;  /* nav row label */
+  --fs-xl:   16;  /* meal name, button text */
+  --fs-2xl:  18;  /* section title */
+  --fs-3xl:  20;  /* profile name, calories big number */
+  --fs-4xl:  24;  /* screen title */
+  --fs-5xl:  28;  /* avatar initial */
+
+  /* Letter spacing tokens (negative tracking on display sizes) */
+  --tracking-tight-1: -0.15;   /* body @ 14 */
+  --tracking-tight-2: -0.20;   /* "View recipe" */
+  --tracking-tight-3: -0.3125; /* meal name @ 16 */
+  --tracking-pill:    0.12;    /* PLANNED pill upper-case */
+
+  /* ---------- Spacing & radius ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-xs: 8px;       /* favorite badge */
+  --radius-sm: 12px;      /* attachment thumb */
+  --radius-md: 14px;      /* button / inner tile */
+  --radius-lg: 16px;      /* card */
+  --radius-pill: 9999px;  /* tab-bar shell, planned pill, FAB */
+
+  /* ---------- Elevation (web equivalent of RN shadow) ---------- */
+  --shadow-card:    0 1px 3px rgba(0,0,0,0.10);
+  --shadow-card-md: 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-floater: 0 10px 16px rgba(0,0,0,0.12);  /* tab-bar pill */
+  --shadow-fab:     0 8px 14px rgba(0,0,0,0.20);   /* chat FAB */
+  --shadow-modal:   0 10px 15px rgba(0,0,0,0.10);
+
+  /* Common gradient tokens */
+  --gradient-cta: linear-gradient(90deg, #9810fa 0%, #155dfc 100%);
+  --gradient-planned: linear-gradient(135deg, rgba(250,245,255,0.5) 0%, rgba(239,246,255,0.5) 100%);
+  --gradient-bottom-fade: linear-gradient(180deg, rgba(255,255,255,0) 0%, #ffffff 100%);
+}
+
+/* ---------- Semantic element styles ---------- */
+html, body {
+  font-family: var(--font-sans);
+  color: var(--ink-900);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--surface-0);
+}
+
+/* Heading hierarchy used across screens */
+.h-screen-title { font-size: 24px; font-weight: 600; color: var(--ink-900); letter-spacing: -0.3px; }
+.h-section      { font-size: 18px; font-weight: 500; color: var(--ink-900); }
+.h-card-title   { font-size: 16px; font-weight: 700; color: var(--ink-700); }
+.h-meal-name    { font-size: 16px; font-weight: 500; color: var(--ink-900); letter-spacing: -0.3125px; line-height: 24px; }
+.h-stat-value   { font-size: 20px; font-weight: 700; color: var(--ink-700); }
+.h-avatar       { font-size: 28px; font-weight: 600; color: var(--surface-0); }
+
+/* Body */
+.t-body         { font-size: 14px; color: var(--ink-500); line-height: 20px; letter-spacing: -0.15px; }
+.t-body-strong  { font-size: 14px; color: var(--ink-600); font-weight: 500; }
+.t-meta         { font-size: 12px; color: var(--ink-350); line-height: 16px; }
+.t-muted        { font-size: 12px; color: var(--ink-300); }
+.t-tag          { font-size: 12px; font-weight: 600; }
+.t-pill         { font-size: 10px; font-weight: 600; letter-spacing: 0.12px; text-transform: uppercase; }
+.t-mono         { font-family: var(--font-mono); }

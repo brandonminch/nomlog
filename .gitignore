@@ -1,0 +1,38 @@
+# Dependencies (root + hoisted)
+node_modules/
+
+# Turborepo
+.turbo/
+
+# Logs and debug
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env secrets (do not use a blanket `.env.*` — that would ignore `*.example` files)
+.env
+**/.env
+**/.env.development
+**/.env.production
+**/.env.local
+**/.env.sentry-build-plugin
+
+# Claude / Cursor local overrides (may contain tokens)
+.claude/settings.local.json
+
+# Optional local tooling
+.idea/
+*.swp
+*.swo
+
+# Cursor debug logs
+.cursor/debug*.log
+
+# Test / coverage (if generated at root)
+coverage/

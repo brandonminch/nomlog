@@ -1,0 +1,85 @@
+{
+  "expo": {
+    "name": "nomlog",
+    "slug": "nomlog-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/nomlog-app-icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/nomlog-splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2C0D86"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.brandonminch.nomlog",
+      "icon": "./assets/nomlog-app-icon.png",
+      "splash": {
+        "image": "./assets/nomlog-splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#240773"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification"
+        ]
+      },
+      "entitlements": {
+        "aps-environment": "development",
+        "com.apple.security.application-groups": [
+          "group.com.brandonminch.nomlog.onesignal"
+        ]
+      },
+      "appleTeamId": "Z627BGVZUG"
+    },
+    "android": {
+      "package": "com.brandonminch.nomlog"
+    },
+    "plugins": [
+      [
+        "onesignal-expo-plugin",
+        {
+          "mode": "development"
+        }
+      ],
+      [
+        "./plugins/healthKitMinimal",
+        {
+          "healthSharePermission": "Nomlog reads workouts and activity data you choose to share so you can log exercises and calories burned.",
+          "healthUpdatePermission": "Nomlog does not need to write to Health for activity logging; this permission is required by HealthKit setup."
+        }
+      ],
+      "expo-router",
+      "expo-apple-authentication",
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Nomlog needs access to your photos so you can log meals from images.",
+          "cameraPermission": "Nomlog needs camera access so you can take meal photos for logging."
+        }
+      ],
+      "expo-font",
+      "expo-splash-screen"
+    ],
+    "scheme": "nomlog",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "cf2ba492-ccef-4356-a077-f5c8a5093819"
+      },
+      "oneSignalAppId": "1c02ff18-3c70-41cb-90b1-d0e79ee24f8d"
+    },
+    "owner": "brandonminch",
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/nomlog-app-icon.png"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+# Supabase CLI configuration
+# See https://supabase.com/docs/guides/cli/config for more details
+
+[project]
+# Project ID from Supabase dashboard
+# You can link this project with: supabase link --project-ref <project-ref>
+
+[auth]
+enabled = true
+
+[db]
+# Migrations are automatically found in ./migrations/ directory
+# Files should follow the pattern: <timestamp>_<name>.sql
+
+[studio]
+enabled = true
+port = 54323

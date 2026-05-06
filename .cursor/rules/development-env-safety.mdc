@@ -1,0 +1,22 @@
+---
+description: Default to development for DB/server changes
+alwaysApply: true
+---
+
+# Development-First DB/Server Safety
+
+When you are making changes that affect the database, server behavior, migrations, seeds, or runtime infrastructure:
+
+- Assume the `development` environment by default.
+- Only use `production` if the user explicitly says to make the changes for `production` (or equivalent: `prod`, `live`, `deploy to production`).
+- If you are unsure whether a step is production-impacting, choose the development variant and call out what you assumed.
+
+## Practical defaults
+
+- Prefer `nomlog-api` development configuration (for example, `nomlog-api/.env.development`) over production configuration (for example, `nomlog-api/.env.production`).
+- Prefer development run/test flows over production deployment flows when proposing commands or scripts.
+
+## Response requirement
+
+- In your reply, explicitly state the environment you are assuming (e.g. “Assuming development unless you asked for production”). 
+

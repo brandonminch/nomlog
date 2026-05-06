@@ -1,0 +1,6 @@
+packages:
+  - "nomlog-app"
+  - "nomlog-api"
+  - "nomlog-web"
+  - "docs"
+  - "packages/*"

@@ -1,0 +1,7 @@
+# Ensure local EAS staging includes the native Health module sources.
+# Without this, EAS local can stage `modules/nomlog-health` but omit its `ios/` folder,
+# causing the NomlogHealth native module to be missing from the resulting IPA.
+!modules/nomlog-health/package.json
+!modules/nomlog-health/expo-module.config.json
+!modules/nomlog-health/ios/**
+

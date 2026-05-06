@@ -1,0 +1,51 @@
+Analyze this meal description and return JSON only (no prose): {mealDescription}
+
+Your job is to take the mealDescription and try to create the most accurate estimate possible on nutrition value and makeup of the meal as though a friend is describing what they ate to you in conversation.
+
+IMPORTANT:
+- This is the FINAL nutrition analysis step. Do NOT ask clarifying questions.
+- Do NOT return any questions field.
+- Do NOT return any assumptions field.
+- NEVER include URLs in `name` or `description` (no links, no citations). If you used sources, incorporate the information but output plain text only.
+
+BRAND / PRODUCT IDENTIFICATION (REQUIRED):
+- Use web search to identify branded products when the description strongly suggests a specific product (brand name, misspelling, restaurant/product context, etc.).
+- If you identify a branded product, update:
+  - `name` to the official product name (or short official meal title)
+  - `description` to use the corrected official name in a natural sentence
+  - `ingredients[].name` to use the official product name for that ingredient (e.g., specific beer, dressing, packaged item).
+- Examples:
+  - "16 oz baja peyote beer" -> ingredient name: "Baja Brewing Peyote IPA", meal name: "Baja Brewing Peyote IPA"
+  - "Annies fig salad dressing" -> ingredient name: "Annie's Organic Fig Balsamic Vinaigrette"
+- Only do this when there’s a clear signal it’s a specific product; don’t web search generic items like “apple” or “rice”.
+
+The GOAL is to create the most accurate estimate possible using only the provided description.
+
+You MUST return pure JSON (no prose) with these fields (no undefined/null):
+- name: a short descriptive string (max 40 characters)
+- description: a conversational, high-level summary of the meal (e.g., "Chicken burrito bowl with rice, beans, and salsa" or "Grilled chicken sandwich"). Keep it brief and natural - do NOT list out detailed portions or ingredient amounts. The description should sound like how someone would casually describe what they ate, not a detailed recipe breakdown.
+- totalNutrition: an object with numeric fields calories (kcal), fat (g), protein (g), carbohydrates (g), fiber (g), sugar (g), sodium (mg), saturatedFat (g), potassium (mg), cholesterol (mg), calcium (mg), iron (mg), vitaminA (IU), vitaminC (mg), vitaminD (IU), magnesium (mg)
+- ingredients: an array of objects each with:
+  - name: string
+  - servingAmount: number (the numeric quantity, e.g., 2, 1.5, 0.25)
+  - servingUnit: string (the unit of measure, e.g., "cups", "sausages", "bun", "grams", "ounces", "tablespoons", "teaspoons", "milliliters", "liters", "slices", "pieces", "patties")
+  - servingSizeGrams: number (estimated weight in grams based on ingredient type and serving size)
+  - nutrition: an object with numeric fields calories (kcal), fat (g), protein (g), carbohydrates (g), fiber (g), sugar (g), sodium (mg), saturatedFat (g), potassium (mg), cholesterol (mg), calcium (mg), iron (mg), vitaminA (IU), vitaminC (mg), vitaminD (IU), magnesium (mg)
+
+SERVING SIZE CONVERSION GUIDELINES:
+- Convert vague descriptions to standard units when appropriate:
+  * "handful", "a few" → estimate quantity and use standard unit (e.g., "1 cup", "2 slices")
+  * "some", "a bit" → estimate quantity and use standard unit
+- Keep natural units when appropriate for the ingredient:
+  * "1 hot dog" → servingAmount: 1, servingUnit: "sausage"
+  * "1 hot dog bun" → servingAmount: 1, servingUnit: "bun"
+  * "2 slices of bread" → servingAmount: 2, servingUnit: "slices"
+- Standard units to use when converting:
+  * Weight: grams (g), ounces (oz), pounds (lb)
+  * Volume: cups, tablespoons (tbsp), teaspoons (tsp), milliliters (ml), liters (l), fluid ounces (fl oz)
+  * Natural units: sausage, bun, slice, piece, patty, etc. (when appropriate)
+- Always provide servingSizeGrams as your best estimate based on the ingredient type and serving size/unit
+- Ensure totals reconcile with ingredient sums within normal rounding.
+- For vague composite items (e.g., "burrito", "salad", "smoothie") infer a reasonable default composition/portion using typical values and record that implicitly in the ingredient list and description (do not ask questions).
+
+Do not include any commentary or markdown. Output JSON only.

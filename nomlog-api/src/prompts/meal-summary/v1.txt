@@ -1,0 +1,94 @@
+Analyze this meal description and return JSON only (no prose): {mealDescription}
+
+Your job in this step is to decide whether we have enough info to log the meal, and to produce a clean human-readable summary of what the user said.
+
+IMPORTANT:
+- Do NOT compute nutrition totals or macro/micro breakdowns in this step.
+- Do NOT return totalNutrition.
+- Do NOT return per-ingredient nutrition objects.
+- If key details are missing such that a reasonable nutrition estimate would be unreliable, ask 1–2 SHORT clarifying questions.
+- NEVER include URLs in `name` or `description` (no links, no citations). Output plain text only.
+- Each clarifying question must target exactly ONE missing detail.
+- NEVER combine multiple asks in one question (no "and/or" multi-detail questions).
+- If you need two details, return two separate question objects.
+- Only ask a clarifying question when you can provide clear, broad suggested answers in a small set.
+- If you cannot produce clear suggestions in 5 options or fewer, DO NOT ask a question; make a reasonable assumption instead.
+- If there are no good suggested answers, DO NOT ask a question; make an assumption instead.
+
+BRAND / PRODUCT DETAILS (FAST MODE):
+- Do NOT browse or use web search in this step.
+- If a branded/product detail materially affects later nutrition analysis, ask ONE short question instead of searching.
+- Especially for beverages and packaged items (soda, energy drink, protein bar, chips, candy, fast food), you should ask about:
+  - the specific product/brand/flavor
+  - the size (e.g., 12 oz can vs 20 oz bottle)
+- Ask these as separate questions if both are needed.
+
+CONVERSATION HISTORY HANDLING:
+- If the meal description includes "CONVERSATION HISTORY" section, this means questions have already been asked and answered.
+- DO NOT ask questions that have already been answered in the conversation history.
+- DO NOT ask similar or rephrased versions of questions that were already answered.
+- If you've already asked 2-3 questions in previous interactions, return an empty questions array and use assumptions instead.
+- Only ask NEW questions about information that hasn't been covered yet.
+
+You MUST return pure JSON (no prose) with these fields (no undefined/null):
+- name: a short descriptive string (max 40 characters)
+- description: a succinct, clear summary of the meal based on the provided details (e.g., "Chicken burrito bowl with rice, beans, salsa")
+- questionSummary: a single concise summary question for chat display when `questions` is non-empty. If `questions` is empty, return an empty string.
+- ingredients: an array of objects each with:
+  - name: string
+  - servingAmount: number (the numeric quantity, e.g., 2, 1.5, 0.25)
+  - servingUnit: string (the unit of measure, e.g., "cups", "sausages", "bun", "grams", "ounces", "tablespoons", "teaspoons", "milliliters", "liters", "slices", "pieces", "patties")
+  - servingSizeGrams: number (estimated weight in grams based on ingredient type and serving size)
+  - provenance: an object with fields:
+    - source: must be "llm_estimate"
+    - confidence: one of low | medium | high
+
+SERVING SIZE CONVERSION GUIDELINES:
+- Convert vague descriptions to standard units when appropriate:
+  * "handful", "a few" → estimate quantity and use standard unit (e.g., "1 cup", "2 slices")
+  * "some", "a bit" → estimate quantity and use standard unit
+- Keep natural units when appropriate for the ingredient:
+  * "1 hot dog" → servingAmount: 1, servingUnit: "sausage"
+  * "1 hot dog bun" → servingAmount: 1, servingUnit: "bun"
+  * "2 slices of bread" → servingAmount: 2, servingUnit: "slices"
+- Standard units to use when converting:
+  * Weight: grams (g), ounces (oz), pounds (lb)
+  * Volume: cups, tablespoons (tbsp), teaspoons (tsp), milliliters (ml), liters (l), fluid ounces (fl oz)
+  * Natural units: sausage, bun, slice, piece, patty, etc. (when appropriate)
+- Always provide servingSizeGrams as your best estimate based on the ingredient type and serving size/unit
+- questions: an array of clarifying question objects ONLY if needed (max 2, and you may include 2 at once if both are important). Each object has:
+  - id: string
+  - text: string (short question, one detail only)
+  - kind: one of portion | brand | prep | misc
+  - options: optional array of strings that serve as short suggestions for guiding user on quick replies
+  - IMPORTANT for `options`: NEVER include generic catch-all answers like "Other", "Other (specify)", or similar. The client provides a custom text input for that.
+  - IMPORTANT for `options`: keep suggestions broad and generic unless choices are truly obvious. Prefer simple category-level suggestions (1-3 words), not overly specific combinations.
+  - IMPORTANT for `options`: if you ask a question, include clear options and keep the list tight (ideally 2-5). If you cannot, use assumptions instead of asking.
+  - Good options example for "What type of bread?": ["Whole wheat", "White", "Sourdough"]
+  - Bad options example: ["Dave's Killer Bread thin-sliced 21 grains", "Fresh-baked artisanal sourdough boule"]
+- assumptions: an array of strings describing defaults used (e.g., "assuming typical serving size", "assuming grilled, not fried")
+
+OUTPUT SIZE LIMITS (IMPORTANT):
+- Keep the response compact and fast.
+- Max 12 ingredients.
+- Keep `description` short (one sentence).
+- Prefer assumptions over questions unless missing info would materially change totals.
+
+Decision rubric for questions:
+- Ask 1–2 SHORT questions ONLY if missing info would materially change totals (>10%) for a future nutrition estimate.
+- If impact is minor, prefer an assumption and list it under assumptions.
+- If conversation history shows questions were already asked, prefer assumptions over asking again.
+- If you ask 2 questions, set `questionSummary` to a natural combined question that captures both asks.
+- If you ask 1 question, `questionSummary` should usually match that question text.
+- Good question style: "What type of bread was used?"
+- Bad question style: "What type of bread and peanut butter were used?"
+
+Vague composite items (burrito, salad, smoothie, sandwich, etc.):
+- If the description is vague and both composition and size are unclear, prefer TWO short clarifying questions:
+  1) one about composition/protein/type
+  2) one about portion/size
+- BUT: If size or components were already discussed in conversation history, use assumptions instead.
+
+Do not include any commentary or markdown. Output JSON only.
+
+

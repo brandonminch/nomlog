@@ -1,0 +1,128 @@
+{
+    "breakfast": [
+        {
+            "title": "Yo, morning champ! 🌅",
+            "message": "What’s the flavor power on your plate today?"
+        },
+        {
+            "title": "Rise ‘n shine, dude! ☀️",
+            "message": "Time to fuel up and log that morning munch!"
+        },
+        {
+            "title": "Breakfast blast! 🥞",
+            "message": "Don’t ghost your grub, track it now!"
+        },
+        {
+            "title": "Morning mojo ⛽",
+            "message": "What’s kickin’ your day into gear, amigo?"
+        },
+        {
+            "title": "Start strong, bro! 🌟",
+            "message": "Log that brekkie and keep your vibes tight!"
+        },
+        {
+            "title": "Breakfast buzz 🍳",
+            "message": "How’d you kick off the AM feast?"
+        },
+        {
+            "title": "Morning grind 📱",
+            "message": "Quick log, keep it rad and consistent!"
+        },
+        {
+            "title": "Fuel up, amigo! ⚡",
+            "message": "What’s the flavor power on your plate today?"
+        },
+        {
+            "title": "Day starter, dude! 🚀",
+            "message": "Log that brekkie and keep the streak alive!"
+        },
+        {
+            "title": "Morning munch 📝",
+            "message": "Time to jot down the breakfast vibes!"
+        }
+    ],
+    "lunch": [
+        {
+            "title": "Lunch break, party! 🥗",
+            "message": "What’s the midday munch madness?"
+        },
+        {
+            "title": "Midday fuel-up 🍽️",
+            "message": "Time to log that lunch, no slacking!"
+        },
+        {
+            "title": "Lunch time, rock on! 🥪",
+            "message": "Don’t forget to track that midday magic!"
+        },
+        {
+            "title": "Afternoon buzz 🔋",
+            "message": "What’s keeping your energy lit, amigo?"
+        },
+        {
+            "title": "Lunch check-in, yo! 📊",
+            "message": "How’s your fuel game looking?"
+        },
+        {
+            "title": "Midday munch 🍜",
+            "message": "Quick log to keep the power flowing!"
+        },
+        {
+            "title": "Lunch vibes 📱",
+            "message": "Time to drop your lunch deets!"
+        },
+        {
+            "title": "Afternoon zap ⚡",
+            "message": "What’s on your lunch radar?"
+        },
+        {
+            "title": "Lunch alert, dude! 🕐",
+            "message": "Keep that healthy streak blazing!"
+        },
+        {
+            "title": "Midday munchies 📝",
+            "message": "Don’t skip the lunch log, bro!"
+        }
+    ],
+    "dinner": [
+        {
+            "title": "Dinner’s up! 🍽️",
+            "message": "What’s the flavor fiesta tonight?"
+        },
+        {
+            "title": "Evening chow 🌙",
+            "message": "Time to log that dinner delight!"
+        },
+        {
+            "title": "Dinner check, amigo! 🍖",
+            "message": "How’d you close out the day’s fuel?"
+        },
+        {
+            "title": "Night bite 🌃",
+            "message": "What’s the dinner scoop tonight?"
+        },
+        {
+            "title": "Evening grind 📱",
+            "message": "Don’t forget to track that night munch!"
+        },
+        {
+            "title": "Dinner log jam 🍲",
+            "message": "Quick entry to seal the day’s deal!"
+        },
+        {
+            "title": "End of day fuel 📊",
+            "message": "How’d you finish your flavor run?"
+        },
+        {
+            "title": "Dinner bell, dude! 🕰️",
+            "message": "Log it up and keep the streak tight!"
+        },
+        {
+            "title": "Evening zap ⚡",
+            "message": "What’s the dinner buzz tonight?"
+        },
+        {
+            "title": "Night bite notes 📝",
+            "message": "Time to lock in your last meal vibes!"
+        }
+    ]
+}

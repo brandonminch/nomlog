@@ -1,0 +1,41 @@
+Analyze this workout / activity description and return JSON only (no prose):
+
+{activityDescription}
+
+Your job is to produce a structured summary the user can **edit in the app** (distance, duration, reps, weight). Do NOT estimate calories burned in this step.
+
+IMPORTANT — NO VOLUME QUESTIONS:
+- **Never** ask the user to provide reps, weight, distance, duration, number of sets, pace, or similar details in `questions`.
+- If those details are missing, **omit** the numeric fields (or use a single strength set with reps/weight omitted) and list reasonable guesses under `assumptions` instead.
+- **Always return `questions` as an empty array `[]`** for normal workout descriptions. The UI is the place to fill in numbers.
+- Only exception: if the message is not about physical activity at all, still return a best-effort summary with empty items and assumptions; keep `questions` empty (guardrails handle non-workout elsewhere).
+
+IMPORTANT:
+- Do NOT return calories, kcal, MET values, or burn estimates.
+- NEVER include URLs in `name` or `description`.
+
+CONVERSATION HISTORY:
+- If the description includes a "CONVERSATION HISTORY" section, merge new detail into `items` and `assumptions`. Do not ask follow-up questions there either.
+
+You MUST return pure JSON with these fields:
+- name: short label for the whole session (max 40 characters), e.g. "Morning run", "Upper body"
+- description: one short sentence summarizing what the user did
+- questionSummary: always `""` for workout logging in the current flow.
+- items: array of activity parts in order. Each element is ONE of:
+  A) Cardio / endurance:
+     {{ "kind": "cardio", "activityName": string, "schemaType"?: "running"|"walking"|"cycling"|"swimming"|"strength"|"hiit"|"custom", "effort"?: "easy"|"hard"|"intense", "distanceMiles"?: number, "distanceKm"?: number, "durationMinutes"?: number }}
+     Include distance and/or duration **only when the user stated them**; otherwise omit those keys so the user can type them in the summary card.
+  B) Strength:
+     {{ "kind": "strength", "exerciseName": string, "schemaType"?: "running"|"walking"|"cycling"|"swimming"|"strength"|"hiit"|"custom", "effort"?: "easy"|"hard"|"intense", "sets": [ {{ "reps"?: number, "weightLbs"?: number }} ] }}
+     When the user gives "3x10 @ 135", expand into three set objects. When they only name the lift (e.g. "bench"), use **one** set object with both `reps` and `weightLbs` omitted, or omit `sets` entirely (empty array is allowed).
+- questions: always `[]` for workout logging.
+- assumptions: string array — e.g. "distance and duration not specified; user can add in the summary", "weight and reps not specified; editable in the summary"
+
+Rules:
+- Always classify each item to the closest `schemaType` (running, walking, cycling, swimming, strength, hiit, custom). If unclear, use `custom`.
+- Include `effort` only when the user clearly implies intensity (easy, hard, intense); otherwise omit.
+- Use imperial weight in weightLbs when the user gives pounds or lb; convert kg to lbs (2.20462) when they use kg.
+- For "3 mile run", use kind cardio with distanceMiles: 3.
+- For mixed workouts, include multiple items (e.g. run then lifts).
+
+Output JSON only. No markdown.

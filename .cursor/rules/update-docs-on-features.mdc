@@ -1,0 +1,27 @@
+---
+description: Update docs when adding or changing app/API features
+globs: nomlog-app/**/*,nomlog-api/**/*
+alwaysApply: false
+---
+
+# Keep docs in sync with features
+
+When you **add, remove, or change** user-facing or API behavior in `nomlog-app` or `nomlog-api`, update the docs so the product inventory stays accurate.
+
+## What to update
+
+1. **Feature inventory** — [docs/FEATURES.md](docs/FEATURES.md) (index) and [docs/features/](docs/features/) (one doc per area).  
+   - New capabilities: add or edit the relevant file in `docs/features/` (e.g. `meal-logging.md`); add a new file and index row if it’s a new area. Update the completeness matrix in FEATURES.md if needed.  
+   - Removed or changed behavior: update the corresponding doc in `docs/features/` and the matrix in FEATURES.md.
+
+2. **Roadmap** (optional) — [docs/roadmap/](docs/roadmap/)  
+   - If the change fulfills a planned item, remove or note it in [docs/roadmap/roadmap.md](docs/roadmap/roadmap.md).  
+   - If the change is a notable product decision, consider adding an ADR in [docs/roadmap/decisions/](docs/roadmap/decisions/).
+
+## When to update
+
+- New screens, flows, or API endpoints.
+- Changes to auth, meal logging, nutrition, search, notifications, or settings.
+- New integrations or major behavior changes.
+
+You don’t need to update docs for small bug fixes, refactors, or UI-only tweaks that don’t change described behavior.

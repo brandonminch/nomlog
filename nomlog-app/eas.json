@@ -1,0 +1,49 @@
+{
+    "cli": {
+        "version": ">= 16.0.0",
+        "appVersionSource": "remote"
+    },
+    "build": {
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "ios": {
+                "simulator": false,
+                "buildConfiguration": "Debug"
+            },
+            "env": {
+                "NODE_ENV": "development",
+                "EXPO_APP_ENV": "development",
+                "EXPO_APPLE_TEAM_ID": "Z627BGVZUG",
+                "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+            },
+            "node": "20.18.1"
+        },
+        "preview": {
+            "distribution": "internal",
+            "ios": {
+                "buildConfiguration": "Release"
+            },
+            "env": {
+                "EXPO_APP_ENV": "production",
+                "EXPO_APPLE_TEAM_ID": "Z627BGVZUG",
+                "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+            },
+            "node": "20.18.1"
+        },
+        "production": {
+            "ios": {
+                "buildConfiguration": "Release"
+            },
+            "env": {
+                "EXPO_APP_ENV": "production",
+                "EXPO_APPLE_TEAM_ID": "Z627BGVZUG",
+                "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+            },
+            "node": "20.18.1"
+        }
+    },
+    "submit": {
+        "production": {}
+    }
+}

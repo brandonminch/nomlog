@@ -1,0 +1,18 @@
+---
+description: Always prefer lucide-react-native for icons in the mobile app
+globs: nomlog-app/**/*.tsx
+alwaysApply: false
+---
+
+## Icon Usage – lucide-react-native
+
+- **Primary icon library**: Use `lucide-react-native` for all new icons in the React Native app.
+- **Avoid mixing sets**: Do not introduce new icon sets (e.g. additional Ionicons, Material icons) unless there is an existing, project-wide exception.
+- **Imports**:
+  - Prefer named imports from `lucide-react-native`, e.g. `import { Clock, Star } from 'lucide-react-native';`
+  - Reuse existing lucide icons before adding new glyphs.
+- **Replacements**:
+  - When touching code that still uses other icon libraries, opportunistically migrate those icons to the closest lucide equivalent when it’s low risk.
+- **Styling**:
+  - Keep `size`, `color`, and `strokeWidth` consistent with surrounding UI and Figma specs.
+

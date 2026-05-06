@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Nomlog API (dev)",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["--cwd", "nomlog-api", "dev:develop"],
+      "port": 3001
+    },
+    {
+      "name": "Nomlog App (Expo)",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["--cwd", "nomlog-app", "start"],
+      "port": 8081
+    },
+    {
+      "name": "Nomlog App (Web)",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["--cwd", "nomlog-app", "web"],
+      "port": 8081
+    }
+  ]
+}

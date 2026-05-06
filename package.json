@@ -1,0 +1,17 @@
+{
+  "name": "nomlog",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "scripts": {
+    "build": "PATH=\"$PWD/node_modules/.bin:$PATH\" turbo run build",
+    "lint": "PATH=\"$PWD/node_modules/.bin:$PATH\" turbo run lint",
+    "typecheck": "PATH=\"$PWD/node_modules/.bin:$PATH\" turbo run typecheck"
+  },
+  "devDependencies": {
+    "pnpm": "9.15.9",
+    "turbo": "^2.4.4"
+  }
+}

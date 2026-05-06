@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nomlog Onboarding</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body { margin: 0; padding: 32px; background: #ece9f3; min-height: 100vh; font-family: var(--font-sans); display: flex; align-items: center; justify-content: center; }
+  @keyframes nomCaret { 0%, 100% { opacity: 1 } 50% { opacity: 0 } }
+  @keyframes nomBob { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+  @keyframes nomDot { 0%, 80%, 100% { transform: scale(0.7); opacity: 0.4 } 40% { transform: scale(1); opacity: 1 } }
+  * { box-sizing: border-box; }
+  button:active { transform: scale(0.98); }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="flow-engine.jsx"></script>
+<script type="text/babel" src="flow-data.jsx"></script>
+<script type="text/babel" src="inputs.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+<script type="text/babel" src="onboarding-screen.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "tone": "playful",
+  "skipAge": false,
+  "skipSex": false,
+  "skipActivity": false,
+  "showSplash": false
+}/*EDITMODE-END*/;
+
+const App = () => {
+  const [tweaks, setTweak] = window.useTweaks(TWEAK_DEFAULTS);
+  const [stage, setStage] = React.useState(tweaks.showSplash ? "splash" : "onboarding");
+  const [done, setDone] = React.useState(false);
+
+  // If splash is toggled off, jump straight in
+  React.useEffect(() => {
+    if (!tweaks.showSplash && stage === "splash") setStage("onboarding");
+  }, [tweaks.showSplash]);
+
+  const reset = () => {
+    setDone(false);
+    setStage(tweaks.showSplash ? "splash" : "onboarding");
+  };
+
+  return (
+    <>
+      <window.IOSDevice>
+        {stage === "splash" && <window.NomSplash onStart={() => setStage("onboarding")}/>}
+        {stage === "onboarding" && !done && (
+          <window.OnboardingScreen
+            key={JSON.stringify({ a: tweaks.skipAge, s: tweaks.skipSex, ac: tweaks.skipActivity, t: tweaks.tone })}
+            tweaks={tweaks}
+            onComplete={() => setDone(true)}
+          />
+        )}
+        {done && <FinishedView onReset={reset}/>}
+      </window.IOSDevice>
+
+      <window.TweaksPanel title="Tweaks">
+        <window.TweakSection label="Flow">
+          <window.TweakToggle label="Show splash screen"
+            value={tweaks.showSplash} onChange={(v) => setTweak("showSplash", v)}/>
+          <window.TweakToggle label="Skip date of birth"
+            value={tweaks.skipAge} onChange={(v) => setTweak("skipAge", v)}/>
+          <window.TweakToggle label="Skip biological sex"
+            value={tweaks.skipSex} onChange={(v) => setTweak("skipSex", v)}/>
+          <window.TweakToggle label="Skip activity level"
+            value={tweaks.skipActivity} onChange={(v) => setTweak("skipActivity", v)}/>
+        </window.TweakSection>
+        <window.TweakSection label="Voice">
+          <window.TweakRadio label="Bot tone"
+            value={tweaks.tone}
+            onChange={(v) => setTweak("tone", v)}
+            options={[
+              { value: "playful", label: "Playful" },
+              { value: "neutral", label: "Neutral" },
+            ]}/>
+        </window.TweakSection>
+        <window.TweakSection label="Prototype">
+          <window.TweakButton onClick={reset}>Restart flow</window.TweakButton>
+        </window.TweakSection>
+      </window.TweaksPanel>
+    </>
+  );
+};
+
+const FinishedView = ({ onReset }) => (
+  <div style={{
+    height: "100%", display: "flex", flexDirection: "column",
+    alignItems: "center", justifyContent: "center", padding: 32, gap: 16,
+    background: "linear-gradient(180deg, #fff 0%, #faf5ff 100%)",
+  }}>
+    <window.NomTaco size={60}/>
+    <div style={{ fontSize: 22, fontWeight: 700, color: "#101828", letterSpacing: -0.4 }}>
+      → Logs screen
+    </div>
+    <div style={{ fontSize: 14, color: "#6a7282", textAlign: "center", maxWidth: 240, lineHeight: 1.4 }}>
+      onboarding done — in the real app you'd land in your meal logs here.
+    </div>
+    <button onClick={onReset} style={{
+      marginTop: 8, padding: "10px 20px", border: "1px solid #e5e7eb",
+      borderRadius: 999, background: "#fff", cursor: "pointer", fontSize: 13,
+      color: "#101828", fontFamily: "inherit", fontWeight: 600,
+    }}>Restart prototype</button>
+  </div>
+);
+
+setTimeout(() => {
+  ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+}, 0);
+</script>
+
+</body>
+</html>

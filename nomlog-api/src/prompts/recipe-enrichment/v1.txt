@@ -1,0 +1,124 @@
+You are enriching a parsed recipe with full metadata for a meal planning database.
+You will receive a parsed recipe (title, summary, ingredients, instructions, basic nutrition) and must return a JSON object that fills in all missing classification and nutritional fields.
+
+IMPORTANT: Only use values from the controlled vocabularies listed below. Do not invent new values.
+
+## Controlled Vocabularies
+
+Dietary Flags (select ALL that apply based on ingredient analysis):
+{dietaryFlags}
+
+Allergens (identify ALL present based on ingredients — e.g., flour means wheat+gluten, soy sauce means soy):
+{allergens}
+
+Categories (select all that apply):
+{categories}
+
+Equipment (list all required):
+{equipment}
+
+Difficulty: easy | medium | advanced
+Cost Tier: budget | moderate | premium
+Pantry Categories for ingredients: dairy, produce, protein, pantry, condiment, frozen, bakery, spice
+
+## Instructions
+
+Analyze the recipe and return a JSON object with these fields:
+
+1. **slug**: URL-safe lowercase identifier derived from the title (e.g., "honey-garlic-chicken-thighs"). Use hyphens, no special characters.
+
+2. **dietaryFlags**: Array of flags that apply. Reason from ingredients:
+   - No meat/fish/dairy/eggs/honey → vegan
+   - No meat/fish but allows dairy/eggs → vegetarian
+   - Fish but no meat → pescatarian
+   - No wheat/barley/rye/oats → gluten_free
+   - No dairy products → dairy_free
+   - Very low carb + high fat → keto
+   - >=25g protein per serving → high_protein
+   - >=6g fiber per serving → high_fiber
+   - etc.
+
+3. **allergens**: Array of allergens present. Check every ingredient carefully:
+   - Milk, cheese, yogurt, butter, cream → dairy
+   - Eggs or egg whites → eggs
+   - Salmon, tuna, cod, etc. → fish
+   - Shrimp, crab, lobster, etc. → shellfish
+   - Almonds, walnuts, cashews, pecans, etc. → tree_nuts
+   - Peanuts or peanut butter → peanuts
+   - Flour, bread, tortillas, pasta → wheat
+   - Soy sauce, tofu, edamame, miso → soy
+   - Sesame oil, sesame seeds, tahini → sesame
+   - Wheat-based items also → gluten
+
+4. **cuisine**: Single lowercase string (e.g., "mexican", "italian", "thai", "american", "indian", "mediterranean", "japanese", "korean", "chinese", "greek", "middle-eastern", "ethiopian", "french", "vietnamese")
+
+5. **difficulty**: Based on technique complexity, number of steps, and skill required — not just time.
+
+6. **categories**: From the controlled list. Consider cooking method and dish type.
+
+7. **estimatedCostTier**: Estimate per-serving cost. budget = under ~$2, moderate = $2-5, premium = over $5.
+
+8. **equipmentNeeded**: From the controlled list. Infer from the cooking method described in instructions.
+
+9. **searchAliases**: 3-5 alternative names or search terms someone might use to find this recipe.
+
+10. **servingUnit**: What one serving is called (e.g., "bowl", "plate", "wrap", "cup", "piece", "serving")
+
+11. **nutrition**: Full per-serving nutrition with 16 nutrients. Estimate from ingredient quantities using standard USDA values:
+    - calories, protein (g), carbohydrates (g), fat (g)
+    - fiber (g), sugar (g), sodium (mg), saturatedFat (g)
+    - potassium (mg), cholesterol (mg), calcium (mg), iron (mg)
+    - vitaminA (mcg), vitaminC (mg), vitaminD (mcg), magnesium (mg)
+
+12. **steps**: Review the input instructions and return a cleaned, normalized array of steps. Each step must be a complete, coherent, self-contained cooking action. Fix common parsing artifacts:
+    - Merge fragments that were incorrectly split mid-sentence (e.g. "Broil until golden," followed by "turning once" should be one step)
+    - A fragment that starts with a lowercase letter is almost certainly a continuation — merge it with the previous step
+    - Remove food-safety boilerplate ("Wash hands", "Refrigerate within 2 hours") unless it is integral to the recipe
+    - Do NOT split steps that belong together; err on the side of fewer, fuller steps
+    - Each step should start with a capital letter and end with terminal punctuation
+    - Return as: [{ "text": "...", "position": 1 }, ...]
+
+13. **ingredients**: For EACH ingredient in the original list, provide enrichment:
+    - **originalText**: The exact original ingredient text (for matching)
+    - **amountInGrams**: Realistic gram weight for the stated amount
+    - **pantryCategory**: One of: dairy, produce, protein, pantry, condiment, frozen, bakery, spice
+    - **optional**: true if the ingredient is optional/garnish, false otherwise
+
+## Example
+
+Input recipe:
+- Title: "Salmon Rice Bowls"
+- Ingredients: ["12 ounces salmon fillet", "1 cup cooked jasmine rice", "1 cup shelled edamame", "2 teaspoons soy sauce", "1 teaspoon sesame oil"]
+
+Example output (partial):
+```json
+{
+  "slug": "salmon-rice-bowls",
+  "dietaryFlags": ["high_protein", "dairy_free", "gluten_free", "pescatarian"],
+  "allergens": ["fish", "soy", "sesame"],
+  "cuisine": "asian-fusion",
+  "difficulty": "easy",
+  "categories": ["bowl"],
+  "estimatedCostTier": "moderate",
+  "equipmentNeeded": ["oven", "stovetop"],
+  "searchAliases": ["salmon bowl", "rice bowl", "fish rice bowl"],
+  "servingUnit": "bowl",
+  "nutrition": {
+    "calories": 560, "protein": 39, "carbohydrates": 45, "fat": 23,
+    "fiber": 6, "sugar": 3, "sodium": 520, "saturatedFat": 4,
+    "potassium": 800, "cholesterol": 70, "calcium": 80, "iron": 3,
+    "vitaminD": 15
+  },
+  "ingredients": [
+    { "originalText": "12 ounces salmon fillet", "amountInGrams": 340, "pantryCategory": "protein", "optional": false },
+    { "originalText": "1 cup cooked jasmine rice", "amountInGrams": 158, "pantryCategory": "pantry", "optional": false },
+    { "originalText": "1 cup shelled edamame", "amountInGrams": 155, "pantryCategory": "frozen", "optional": false },
+    { "originalText": "2 teaspoons soy sauce", "amountInGrams": 10, "pantryCategory": "condiment", "optional": false },
+    { "originalText": "1 teaspoon sesame oil", "amountInGrams": 5, "pantryCategory": "pantry", "optional": false }
+  ]
+}
+```
+
+## Response Format
+
+Return ONLY valid JSON matching the schema above. No markdown, no explanation — just the JSON object.

@@ -1,0 +1,986 @@
+openapi: 3.0.3
+info:
+  title: Nomlog API
+  description: API for meal logging and nutrition tracking
+  version: 1.0.0
+  contact:
+    name: Nomlog API Support
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Local development server
+  - url: https://nomlog-api.onrender.com/api/v1
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Users
+    description: User profile management
+  - name: Logs
+    description: Meal log management and nutrition analysis
+  - name: Water
+    description: Daily water intake tracking
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      description: Authenticate user and get access token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful
+                  deprecated:
+                    type: boolean
+                    example: true
+                  user:
+                    $ref: '#/components/schemas/User'
+                  session:
+                    $ref: '#/components/schemas/Session'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Sign up new user
+      description: Create a new user account
+      operationId: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User created successfully
+                  deprecated:
+                    type: boolean
+                    example: true
+                  user:
+                    $ref: '#/components/schemas/User'
+                  session:
+                    $ref: '#/components/schemas/Session'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      description: Get a new access token using refresh token
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token refreshed successfully
+                  deprecated:
+                    type: boolean
+                    example: true
+                  user:
+                    $ref: '#/components/schemas/User'
+                  session:
+                    $ref: '#/components/schemas/Session'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users/profile:
+    get:
+      tags:
+        - Users
+      summary: Get current user profile
+      description: Retrieve the authenticated user's profile including goals and preferences
+      operationId: getProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  profile:
+                    $ref: '#/components/schemas/UserProfile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      tags:
+        - Users
+      summary: Update user profile
+      description: Update the authenticated user's profile. All fields are optional for partial updates.
+      operationId: updateProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+            examples:
+              setGoals:
+                summary: Set daily goals and weight
+                value:
+                  daily_calorie_goal: 2900
+                  daily_protein_goal: 180
+                  daily_carb_goal: 300
+                  daily_fat_goal: 110
+                  weight: 195
+              updateWeight:
+                summary: Update only weight
+                value:
+                  weight: 200
+              updateTimezone:
+                summary: Update timezone and meal times
+                value:
+                  timezone: America/New_York
+                  breakfast_time: 07:00
+                  lunch_time: 12:30
+                  dinner_time: 19:00
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  profile:
+                    $ref: '#/components/schemas/UserProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/profile/llm-usage:
+    get:
+      tags:
+        - Users
+      summary: OpenAI usage in current quota window
+      description: Returns rolling-window token totals for OpenAI Responses API calls attributed to this user (see LLM_TOKENS_LIMIT_PER_WINDOW).
+      operationId: getProfileLlmUsage
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Usage summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  windowSeconds:
+                    type: integer
+                  limitTokens:
+                    type: integer
+                    nullable: true
+                  usedTokens:
+                    type: integer
+                  remainingTokens:
+                    type: integer
+                    nullable: true
+                  quotaEnabled:
+                    type: boolean
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /logs:
+    get:
+      tags:
+        - Logs
+      summary: Get meal logs for a date
+      description: Retrieve meal logs for a specific date (defaults to today)
+      operationId: getLogs
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: date
+          in: query
+          description: Date in YYYY-MM-DD format (defaults to today)
+          required: false
+          schema:
+            type: string
+            format: date
+            example: 2024-03-15
+        - name: timezone
+          in: query
+          description: Timezone for date calculation (defaults to UTC)
+          required: false
+          schema:
+            type: string
+            example: America/New_York
+      responses:
+        '200':
+          description: Logs retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MealLog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Logs
+      summary: Create meal log with nutrition analysis
+      description: Create a new meal log by providing a natural language description. The API will analyze the meal and extract nutrition information.
+      operationId: createLog
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - mealDescription
+              properties:
+                mealDescription:
+                  type: string
+                  description: Natural language description of the meal
+                  example: I had a breakfast with 2 eggs, 2 slices of whole wheat toast with butter, and a cup of coffee with milk
+                loggedAt:
+                  type: string
+                  format: date-time
+                  description: When the meal was actually consumed (ISO 8601). If not provided, uses current time.
+                  example: 2024-03-15T08:30:00Z
+            examples:
+              breakfast:
+                summary: Breakfast example
+                value:
+                  mealDescription: I had a breakfast with 2 eggs, 2 slices of whole wheat toast with butter, and a cup of coffee with milk
+              lunch:
+                summary: Lunch example
+                value:
+                  mealDescription: Grilled chicken breast with brown rice and steamed broccoli
+                  loggedAt: 2024-03-15T12:30:00Z
+      responses:
+        '201':
+          description: Meal log created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Meal log created with nutrition analysis
+                  data:
+                    $ref: '#/components/schemas/MealLog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /logs/analyze:
+    post:
+      tags:
+        - Logs
+      summary: Analyze meal description (stateless)
+      description: Analyze a meal description without creating a log. Useful for previewing nutrition data.
+      operationId: analyzeMeal
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - mealDescription
+              properties:
+                mealDescription:
+                  type: string
+                  description: Natural language description of the meal
+                  example: Grilled salmon with quinoa and asparagus
+      responses:
+        '200':
+          description: Analysis completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analysis:
+                    $ref: '#/components/schemas/NutritionAnalysis'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /logs/{id}:
+    get:
+      tags:
+        - Logs
+      summary: Get meal log by ID
+      description: Retrieve a specific meal log by its ID
+      operationId: getLogById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Meal log ID
+          schema:
+            type: string
+            format: uuid
+            example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '200':
+          description: Log retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  log:
+                    $ref: '#/components/schemas/MealLog'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      tags:
+        - Logs
+      summary: Update meal log timestamp
+      description: Update when a meal was actually consumed
+      operationId: updateLogTimestamp
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Meal log ID
+          schema:
+            type: string
+            format: uuid
+            example: 123e4567-e89b-12d3-a456-426614174000
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - loggedAt
+              properties:
+                loggedAt:
+                  type: string
+                  format: date-time
+                  description: When the meal was actually consumed (ISO 8601)
+                  example: 2024-03-15T08:30:00Z
+      responses:
+        '200':
+          description: Log updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Meal log updated successfully
+                  data:
+                    $ref: '#/components/schemas/MealLog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          description: Unauthorized to update this meal log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      tags:
+        - Logs
+      summary: Delete meal log
+      description: Delete a meal log by ID
+      operationId: deleteLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Meal log ID
+          schema:
+            type: string
+            format: uuid
+            example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '200':
+          description: Log deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Meal log deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /water:
+    get:
+      tags:
+        - Water
+      summary: Get water log for a date
+      description: Retrieve water intake log for a specific date
+      operationId: getWaterLog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: date
+          in: query
+          description: Date in YYYY-MM-DD format
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+            example: 2024-03-15
+      responses:
+        '200':
+          description: Water log retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  waterLog:
+                    oneOf:
+                      - $ref: '#/components/schemas/WaterLog'
+                      - type: 'null'
+                    description: Water log for the date, or null if none exists
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      tags:
+        - Water
+      summary: Update water log for a date
+      description: Create or update water intake log for a specific date (upsert)
+      operationId: updateWaterLog
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - date
+                - glasses
+              properties:
+                date:
+                  type: string
+                  pattern: '^\d{4}-\d{2}-\d{2}$'
+                  description: Date in YYYY-MM-DD format
+                  example: 2024-03-15
+                glasses:
+                  type: integer
+                  minimum: 0
+                  description: Total number of glasses of water
+                  example: 4
+            examples:
+              updateWater:
+                summary: Update water intake
+                value:
+                  date: 2024-03-15
+                  glasses: 4
+      responses:
+        '200':
+          description: Water log updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Water log updated successfully
+                  waterLog:
+                    $ref: '#/components/schemas/WaterLog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from /auth/login endpoint
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        created_at:
+          type: string
+          format: date-time
+
+    Session:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token for API authentication
+        refresh_token:
+          type: string
+          description: Token for refreshing the access token
+        expires_in:
+          type: integer
+          description: Token expiration time in seconds
+        token_type:
+          type: string
+          example: bearer
+        user:
+          $ref: '#/components/schemas/User'
+
+    UserProfile:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        timezone:
+          type: string
+          example: America/New_York
+        breakfast_time:
+          type: string
+          pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+          example: 08:00
+          description: Breakfast time in HH:mm format
+        lunch_time:
+          type: string
+          pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+          example: 12:00
+          description: Lunch time in HH:mm format
+        dinner_time:
+          type: string
+          pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+          example: 18:00
+          description: Dinner time in HH:mm format
+        push_enabled:
+          type: boolean
+          example: true
+        daily_calorie_goal:
+          type: number
+          nullable: true
+          example: 2900
+          description: Daily calorie target in calories
+        daily_protein_goal:
+          type: number
+          nullable: true
+          example: 180
+          description: Daily protein target in grams
+        daily_carb_goal:
+          type: number
+          nullable: true
+          example: 300
+          description: Daily carbohydrate target in grams
+        daily_fat_goal:
+          type: number
+          nullable: true
+          example: 110
+          description: Daily fat target in grams
+        weight:
+          type: number
+          nullable: true
+          example: 195
+          description: Current weight in pounds (lbs)
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+          example: '1994-06-15'
+          description: Date of birth (YYYY-MM-DD). Age is derived using timezone.
+        age_years:
+          type: integer
+          nullable: true
+          description: Whole years of age derived from date_of_birth when set (computed on read; not persisted).
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    UserProfileUpdate:
+      type: object
+      description: All fields are optional for partial updates
+      properties:
+        timezone:
+          type: string
+          example: America/New_York
+        breakfast_time:
+          type: string
+          pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+          example: 08:00
+        lunch_time:
+          type: string
+          pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+          example: 12:00
+        dinner_time:
+          type: string
+          pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+          example: 18:00
+        push_enabled:
+          type: boolean
+        daily_calorie_goal:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 2900
+        daily_protein_goal:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 180
+        daily_carb_goal:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 300
+        daily_fat_goal:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 110
+        weight:
+          type: number
+          nullable: true
+          minimum: 0
+          example: 195
+        recalculate_nutrition_targets:
+          type: boolean
+          description: >
+            When true, recompute TDEE and daily calorie/macro goals from BMR/TDEE rules.
+            When false or omitted and the user already has a calorie goal, existing goals are kept.
+            First-time profiles (no calorie goal yet) still get computed targets when all inputs are present.
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+          example: '1994-06-15'
+          description: Date of birth (YYYY-MM-DD). Preferred over legacy age_input.
+
+    MealLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Breakfast
+        description:
+          type: string
+          example: I had a breakfast with 2 eggs, 2 slices of whole wheat toast with butter, and a cup of coffee with milk
+        total_nutrition:
+          $ref: '#/components/schemas/Nutrition'
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        logged_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the meal was actually consumed
+
+    WaterLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+          example: 2024-03-15
+          description: Date in YYYY-MM-DD format
+        glasses:
+          type: integer
+          minimum: 0
+          example: 4
+          description: Total number of glasses of water
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Nutrition:
+      type: object
+      properties:
+        calories:
+          type: number
+          example: 450
+        fat:
+          type: number
+          example: 22
+        protein:
+          type: number
+          example: 20
+        carbohydrates:
+          type: number
+          example: 45
+        fiber:
+          type: number
+          example: 5
+        sugar:
+          type: number
+          example: 8
+        sodium:
+          type: number
+          example: 400
+        saturatedFat:
+          type: number
+          example: 10
+        potassium:
+          type: number
+          example: 300
+        cholesterol:
+          type: number
+          example: 200
+        calcium:
+          type: number
+          example: 100
+        iron:
+          type: number
+          example: 2
+        vitaminA:
+          type: number
+          example: 500
+        vitaminC:
+          type: number
+          example: 10
+        vitaminD:
+          type: number
+          example: 50
+        magnesium:
+          type: number
+          example: 50
+
+    Ingredient:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Eggs
+        servingAmount:
+          type: number
+          example: 2
+        servingUnit:
+          type: string
+          example: eggs
+        servingSizeGrams:
+          type: number
+          example: 100
+        nutrition:
+          $ref: '#/components/schemas/Nutrition'
+
+    NutritionAnalysis:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Breakfast
+        description:
+          type: string
+        totalNutrition:
+          $ref: '#/components/schemas/Nutrition'
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Error message
+        message:
+          type: string
+          example: Detailed error message
+        details:
+          type: array
+          items:
+            type: object
+          description: Validation error details (for 400 responses)
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized - invalid or missing token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

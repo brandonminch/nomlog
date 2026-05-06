@@ -1,0 +1,95 @@
+[
+    {
+        "url": "https://based.cooking/spiced-apple-pancakes/",
+        "slug": "spiced-apple-pancakes",
+        "targetMealTypes": [
+            "breakfast"
+        ],
+        "targetCuisine": "german",
+        "notes": "Public-domain recipe. Moderate complexity; pancakes with spiced apple slices provide fiber and carbohydrates for an energizing breakfast.",
+        "status": "fetched",
+        "fetchedAt": "2026-03-24T17:49:35.976Z"
+    },
+    {
+        "url": "https://based.cooking/granola/",
+        "slug": "granola",
+        "targetMealTypes": [
+            "breakfast",
+            "snack"
+        ],
+        "targetCuisine": "american",
+        "notes": "Public-domain recipe. Baked granola with oats, nuts and dried fruit. Moderate prep and cooking; high-fiber and healthy fats.",
+        "status": "fetched",
+        "fetchedAt": "2026-03-24T17:50:03.001Z"
+    },
+    {
+        "url": "https://www.makebetterfood.com/recipes/overnight-oatmeal/",
+        "slug": "overnight-oatmeal",
+        "targetMealTypes": [
+            "breakfast",
+            "snack"
+        ],
+        "targetCuisine": "american",
+        "notes": "Easy no-cook oatmeal parfait with oats, Greek yogurt and vanilla. High protein and fiber; ideal for meal prep.",
+        "status": "fetched",
+        "fetchedAt": "2026-03-24T17:50:27.772Z"
+    },
+    {
+        "url": "https://www.foodista.com/recipe/YCSKBSCK/oatmeal-cookie-oatmeal",
+        "slug": "oatmeal-cookie-oatmeal",
+        "targetMealTypes": [
+            "breakfast"
+        ],
+        "targetCuisine": "american",
+        "notes": "Easy microwave oatmeal with raisins, nuts and cinnamon; sweetened with stevia. High-fiber and low-sugar.",
+        "status": "fetched",
+        "fetchedAt": "2026-03-24T17:52:06.813Z"
+    },
+    {
+        "url": "https://www.foodista.com/recipe/KHN7KKGJ/healthy-black-forest-baked-oatmeal",
+        "slug": "healthy-black-forest-baked-oatmeal",
+        "targetMealTypes": [
+            "breakfast",
+            "dessert"
+        ],
+        "targetCuisine": "german",
+        "notes": "Baked oatmeal ‘cakes’ with cherries, cocoa, oats and chia seeds. Vegan-friendly and antioxidant-rich.",
+        "status": "fetched",
+        "fetchedAt": "2026-03-24T17:52:57.218Z"
+    },
+    {
+        "url": "https://www.themealdb.com/meal/52896-full-english-breakfast-recipe",
+        "slug": "full-english-breakfast",
+        "targetMealTypes": [
+            "breakfast"
+        ],
+        "targetCuisine": "british",
+        "notes": "Classic British breakfast with sausages, bacon, eggs, mushrooms, tomatoes and fried bread. High-protein and high-calorie.",
+        "status": "fetched",
+        "fetchedAt": "2026-03-24T17:54:29.412Z"
+    },
+    {
+        "url": "https://foodhero.org/recipes/baked-oatmeal-cups",
+        "slug": "baked-oatmeal-cups",
+        "targetMealTypes": [
+            "breakfast",
+            "snack"
+        ],
+        "targetCuisine": "american",
+        "notes": "Healthy baked oatmeal muffins with oats, applesauce/banana, nuts and optional fruit. High fiber and portable.",
+        "status": "fetched",
+        "fetchedAt": "2026-03-24T17:55:58.778Z"
+    },
+    {
+        "url": "https://foodhero.org/recipes/eggplant-omelet-tortang-talong",
+        "slug": "eggplant-omelet-tortang-talong",
+        "targetMealTypes": [
+            "breakfast",
+            "lunch"
+        ],
+        "targetCuisine": "filipino",
+        "notes": "Filipino eggplant omelet where grilled eggplant is dipped in egg and pan-fried. High fiber and moderate protein.",
+        "status": "fetched",
+        "fetchedAt": "2026-03-24T17:56:00.302Z"
+    }
+]

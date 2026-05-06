@@ -1,0 +1,10 @@
+{
+  "name": "@nomlog/docs",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "lint": "node -e \"console.log('docs: add markdownlint/link-check when ready')\"",
+    "build": "node -e \"console.log('docs: no build output')\"",
+    "typecheck": "node -e \"process.exit(0)\""
+  }
+}
