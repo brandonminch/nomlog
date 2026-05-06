@@ -165,7 +165,7 @@ export const ProfileReviewSummary: React.FC<ProfileReviewSummaryProps> = ({
       {showIntroText && (
         <View style={styles.botTextBlock}>
           <Text style={styles.botText}>
-            {"Here's a quick summary of what you've told me so far. You can tap any of these to change your answers."}
+            {"Here's a quick summary of what you've told me so far. You can tap any of these to tweak your answers."}
           </Text>
         </View>
       )}
