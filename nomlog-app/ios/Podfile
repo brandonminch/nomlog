@@ -50,15 +50,15 @@ target 'nomlog' do
       :ccache_enabled => podfile_properties['apple.ccacheEnabled'] == 'true',
     )
 
-    # Xcode 16+ / Apple Clang 17+ (e.g. Xcode Cloud): the bundled `fmt` pod can fail to archive with
-    # "Call to consteval function 'fmt::basic_format_string::basic_format_string' is not a constant expression"
-    # when compiled as C++20. Compile `fmt` as C++17 only; do not change the whole Pods project.
+    # @generated begin nomlog-fmt-cpp17
+    # Xcode 16+ / Apple Clang 17+: fmt consteval archive fix — compile fmt pod as C++17 only
     installer.pods_project.targets.each do |target|
       next unless target.name == 'fmt'
       target.build_configurations.each do |cfg|
         cfg.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
       end
     end
+    # @generated end nomlog-fmt-cpp17
 
     # This is necessary for Xcode 14, because it signs resource bundles by default
     # when building for devices.
