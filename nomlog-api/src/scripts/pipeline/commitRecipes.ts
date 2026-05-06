@@ -4,11 +4,11 @@
  * Reads manifest.json, processes entries with status "approved",
  * validates against the CuratedRecipe schema, and upserts to Supabase.
  *
- * Usage:
- *   yarn pipeline:commit                    — commit approved recipes
- *   yarn pipeline:commit:develop            — commit to development database
- *   yarn pipeline:commit:develop --force    — re-upsert all committed recipes (for edits)
- *   yarn pipeline:commit:develop --force black-bean-chili salmon-teriyaki  — re-upsert specific slugs
+ * Usage (from monorepo root):
+ *   pnpm --filter nomlog-api run pipeline:commit                    — commit approved recipes
+ *   pnpm --filter nomlog-api run pipeline:commit:develop            — commit to development database
+ *   pnpm --filter nomlog-api run pipeline:commit:develop -- --force    — re-upsert all committed recipes (for edits)
+ *   pnpm --filter nomlog-api run pipeline:commit:develop -- --force black-bean-chili salmon-teriyaki  — re-upsert specific slugs
  */
 import fs from 'fs';
 import path from 'path';

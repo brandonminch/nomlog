@@ -1,0 +1,13 @@
+---
+description: Monorepo uses pnpm workspaces; do not use Yarn for installs or docs
+alwaysApply: true
+---
+
+# Package manager
+
+- This repository uses **pnpm** workspaces with a root **`pnpm-lock.yaml`** and pinned **`packageManager`** in the root `package.json`. Do **not** instruct `yarn` or `npm install` for day-to-day dependency management.
+- Prefer **`pnpm install`** from the **monorepo root**. To run scripts in one package: **`pnpm --filter <package-name> run <script>`** (see root `README.md`).
+- When adding dependencies, use pnpm from the appropriate package context (`pnpm add` in that package, or workspace-aware flags) so the lockfile stays consistent.
+- Do not change the pinned pnpm version unless the user explicitly asks for a toolchain upgrade.
+
+Historical note: older docs or scripts may still mention Yarn from pre-monorepo migration; treat those as stale unless explicitly marked as legacy CI.

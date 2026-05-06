@@ -1,12 +1,9 @@
-# Package Manager Rules
-- Always use yarn as the package manager
-- NEVER add the "packageManager" field to any package.json files
-- The packageManager field should only be present in nomlog-app/package.json (for EAS compatibility)
-- When editing package.json files, only modify the specific fields requested, do not add packageManager
+# Nomlog app (monorepo package)
 
-# API Specific Rules
-- For nomlog-api: Do not add packageManager field to package.json
-- For nomlog-app: The packageManager field is already present and should not be modified
+- Use **pnpm**, not Yarn. Install and lockfile live at the **repo root**; see root `README.md` and `.cursor/rules/package-manager.mdc`.
+- Typical commands from repo root: `pnpm --filter nomlog-app run start`, `pnpm --filter nomlog-app run ios`, etc.
+- Do not change the pinned `packageManager` version in `package.json` unless the user asks for a toolchain upgrade.
 
-# Agent Rules
+# Agent rules
+
 - Always state agent model and version used in summary of changes

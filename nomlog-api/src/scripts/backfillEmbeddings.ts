@@ -1,10 +1,10 @@
 /**
  * Backfill script to generate embeddings for existing meal logs
  * 
- * Usage:
- *   yarn ts-node src/scripts/backfillEmbeddings.ts
- *   yarn ts-node src/scripts/backfillEmbeddings.ts --dry-run
- *   yarn ts-node src/scripts/backfillEmbeddings.ts --batch-size 50
+ * Usage (from monorepo root):
+ *   pnpm --filter nomlog-api exec ts-node src/scripts/backfillEmbeddings.ts
+ *   pnpm --filter nomlog-api exec ts-node src/scripts/backfillEmbeddings.ts -- --dry-run
+ *   pnpm --filter nomlog-api exec ts-node src/scripts/backfillEmbeddings.ts -- --batch-size 50
  */
 
 import dotenv from 'dotenv';

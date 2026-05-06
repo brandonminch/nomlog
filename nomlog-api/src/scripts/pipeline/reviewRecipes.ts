@@ -1,12 +1,12 @@
 /**
  * Pipeline Step 3: Review, approve, or reject enriched recipes.
  *
- * Usage:
- *   yarn pipeline:review                         — print summary table
- *   yarn pipeline:review --detail <slug>          — pretty-print full recipe JSON
- *   yarn pipeline:review --approve <slug> [...]   — approve specific recipes
- *   yarn pipeline:review --approve-all            — approve all enriched recipes
- *   yarn pipeline:review --reject <slug> [...]    — reject specific recipes
+ * Usage (from monorepo root):
+ *   pnpm --filter nomlog-api run pipeline:review                         — print summary table
+ *   pnpm --filter nomlog-api run pipeline:review -- --detail <slug>          — pretty-print full recipe JSON
+ *   pnpm --filter nomlog-api run pipeline:review -- --approve <slug> [...]   — approve specific recipes
+ *   pnpm --filter nomlog-api run pipeline:review -- --approve-all            — approve all enriched recipes
+ *   pnpm --filter nomlog-api run pipeline:review -- --reject <slug> [...]    — reject specific recipes
  */
 import fs from 'fs';
 import path from 'path';

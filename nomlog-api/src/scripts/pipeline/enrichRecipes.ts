@@ -5,7 +5,7 @@
  * reads <slug>.raw.json, calls the enrichment service, writes
  * full recipe to <slug>.json, and updates the manifest.
  *
- * Usage: yarn pipeline:enrich
+ * Usage (from monorepo root): pnpm --filter nomlog-api run pipeline:enrich
  */
 import fs from 'fs';
 import path from 'path';

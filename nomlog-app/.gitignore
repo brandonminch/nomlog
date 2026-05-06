@@ -7,7 +7,7 @@ node_modules/
 .expo/
 dist/
 web-build/
-# ios/ is committed for Xcode Cloud; regenerate with `yarn prebuild` after native config changes.
+# ios/ is committed for Xcode Cloud; regenerate with `pnpm --filter nomlog-app run prebuild` after native config changes.
 android/
 
 # Native

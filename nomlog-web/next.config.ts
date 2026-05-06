@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
-  // Nomlog parent folder has its own yarn.lock; pin Turbopack root to this app.
+  // Monorepo root uses pnpm; pin Turbopack root to this app so resolution stays local.
   turbopack: {
     root: projectRoot,
   },

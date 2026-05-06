@@ -4,9 +4,9 @@
  * Reads manifest.json, processes entries with status "pending",
  * writes parsed recipe data to <slug>.raw.json, and updates the manifest.
  *
- * Usage:
- *   yarn pipeline:fetch                — fetch all pending recipes
- *   yarn pipeline:fetch --retry-failed — also retry entries that previously failed
+ * Usage (from monorepo root):
+ *   pnpm --filter nomlog-api run pipeline:fetch                — fetch all pending recipes
+ *   pnpm --filter nomlog-api run pipeline:fetch -- --retry-failed — also retry entries that previously failed
  */
 import fs from 'fs';
 import path from 'path';

@@ -4,9 +4,15 @@ If you're working with Node.js (versions 20+), the official `posthog-node` libra
 
 ## Installation
 
-Run either `npm` or `yarn` in terminal to add it to your project:
+**Nomlog:** use **pnpm** for `nomlog-api` (see monorepo root `README.md`). Generic options:
 
 PostHog AI
+
+### pnpm (preferred in this repo)
+
+```bash
+pnpm add posthog-node
+```
 
 ### npm
 
@@ -18,12 +24,6 @@ npm install posthog-node --save
 
 ```bash
 yarn add posthog-node
-```
-
-### pnpm
-
-```bash
-pnpm add posthog-node
 ```
 
 ### Bun

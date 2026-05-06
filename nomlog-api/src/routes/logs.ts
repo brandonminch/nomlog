@@ -11,6 +11,7 @@ import { NutritionData } from '../types/nutrition';
 import { MealChatIntentClassifier, type MealChatIntent } from '../services/mealChatIntentClassifier';
 import posthog from '../config/posthog';
 import { LlmQuotaExceededError, replyIfLlmQuotaExceeded } from '../ai/openaiResponses';
+import { singleRouteParam } from '../utils/singleRouteParam';
 
 const router = Router();
 const VALID_MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
@@ -2576,7 +2577,7 @@ router.post('/simple', requireAuth, async (req: Request, res: Response) => {
 // Update a meal log (time/date only, or full meal body)
 router.patch('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = singleRouteParam(req.params.id);
     const {
       loggedAt,
       plannedFor,

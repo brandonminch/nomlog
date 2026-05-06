@@ -4,6 +4,7 @@ import { RecipeSourceService } from '../services/recipeSourceService';
 import { RecipeInteractionRepository } from '../services/recipeRepository';
 import { RecipeInteractionTypeSchema } from '../types/recipe';
 import posthog from '../config/posthog';
+import { singleRouteParam } from '../utils/singleRouteParam';
 
 const router = Router();
 const recipeSourceService = new RecipeSourceService();
@@ -11,7 +12,7 @@ const interactionRepo = new RecipeInteractionRepository();
 
 router.get('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = singleRouteParam(req.params.id);
     if (!id) {
       res.status(400).json({ error: 'Missing recipe id' });
       return;
@@ -40,12 +41,17 @@ router.get('/:id', requireAuth, async (req: Request, res: Response) => {
 /** Record an interaction (view, save, cook, rate, skip). */
 router.post('/:id/interactions', requireAuth, async (req: Request, res: Response) => {
   try {
-    const { id: recipeId } = req.params;
+    const recipeId = singleRouteParam(req.params.id);
     const userId = (req as any).userId as string;
 
     const parsed = RecipeInteractionTypeSchema.safeParse(req.body.interactionType);
     if (!parsed.success) {
       res.status(400).json({ error: 'Invalid or missing interactionType' });
+      return;
+    }
+
+    if (!recipeId) {
+      res.status(400).json({ error: 'Missing recipe id' });
       return;
     }
 
@@ -89,8 +95,14 @@ router.post('/:id/interactions', requireAuth, async (req: Request, res: Response
 /** Remove a specific interaction type (e.g. unsave). */
 router.delete('/:id/interactions/:interactionType', requireAuth, async (req: Request, res: Response) => {
   try {
-    const { id: recipeId, interactionType } = req.params;
+    const recipeId = singleRouteParam(req.params.id);
+    const interactionType = singleRouteParam(req.params.interactionType);
     const userId = (req as any).userId as string;
+
+    if (!recipeId || !interactionType) {
+      res.status(400).json({ error: 'Missing recipe id or interactionType' });
+      return;
+    }
 
     const parsed = RecipeInteractionTypeSchema.safeParse(interactionType);
     if (!parsed.success) {
@@ -112,8 +124,13 @@ router.delete('/:id/interactions/:interactionType', requireAuth, async (req: Req
 /** Get a user's interactions with a specific recipe. */
 router.get('/:id/interactions', requireAuth, async (req: Request, res: Response) => {
   try {
-    const { id: recipeId } = req.params;
+    const recipeId = singleRouteParam(req.params.id);
     const userId = (req as any).userId as string;
+
+    if (!recipeId) {
+      res.status(400).json({ error: 'Missing recipe id' });
+      return;
+    }
 
     const interactions = await interactionRepo.getUserInteractions(userId, recipeId);
     res.json({ interactions });
@@ -129,7 +146,11 @@ router.get('/:id/interactions', requireAuth, async (req: Request, res: Response)
 /** Get aggregate stats for a recipe (view count, avg rating, etc.). */
 router.get('/:id/stats', requireAuth, async (req: Request, res: Response) => {
   try {
-    const { id: recipeId } = req.params;
+    const recipeId = singleRouteParam(req.params.id);
+    if (!recipeId) {
+      res.status(400).json({ error: 'Missing recipe id' });
+      return;
+    }
     const stats = await interactionRepo.getRecipeAggregates(recipeId);
     res.json({ stats });
   } catch (error) {

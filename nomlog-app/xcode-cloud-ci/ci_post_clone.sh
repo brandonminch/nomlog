@@ -12,9 +12,8 @@ APP_ROOT="$(cd "$IOS_DIR/.." && pwd)"
 
 echo "[ci_post_clone] IOS_DIR=$IOS_DIR APP_ROOT=$APP_ROOT"
 
-cd "$APP_ROOT"
-
 NOMLOG_CI_NODE_VERSION="${NOMLOG_CI_NODE_VERSION:-20.18.1}"
+PNPM_VERSION="${PNPM_VERSION:-9.15.9}"
 
 ensure_node() {
   if command -v node >/dev/null 2>&1; then
@@ -41,33 +40,69 @@ ensure_node() {
   echo "[ci_post_clone] node: $(command -v node) ($(node -v))"
 }
 
-ensure_yarn_install() {
-  if command -v yarn >/dev/null 2>&1; then
-    yarn install --frozen-lockfile || yarn install
+monorepo_root_from() {
+  local dir="$1"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/pnpm-workspace.yaml" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
+ensure_pnpm_on_path() {
+  if command -v pnpm >/dev/null 2>&1; then
+    echo "[ci_post_clone] pnpm: $(command -v pnpm) ($(pnpm -v))"
     return 0
   fi
 
   if command -v corepack >/dev/null 2>&1; then
     corepack enable || true
-    if corepack prepare yarn@1.22.22 --activate 2>/dev/null; then
-      yarn install --frozen-lockfile || yarn install
+    if corepack prepare "pnpm@${PNPM_VERSION}" --activate 2>/dev/null; then
+      echo "[ci_post_clone] pnpm: $(command -v pnpm) ($(pnpm -v))"
       return 0
     fi
   fi
 
   if command -v npm >/dev/null 2>&1; then
-    npm install -g yarn@1.22.22 || true
+    npm install -g "pnpm@${PNPM_VERSION}" || true
   fi
 
-  if command -v yarn >/dev/null 2>&1; then
-    yarn install --frozen-lockfile || yarn install
+  if command -v pnpm >/dev/null 2>&1; then
+    echo "[ci_post_clone] pnpm: $(command -v pnpm) ($(pnpm -v))"
+    return 0
+  fi
+
+  return 1
+}
+
+pnpm_run() {
+  if command -v pnpm >/dev/null 2>&1; then
+    pnpm "$@"
   else
-    npx --yes yarn@1.22.22 install --frozen-lockfile || npx --yes yarn@1.22.22 install
+    npx --yes "pnpm@${PNPM_VERSION}" "$@"
   fi
 }
 
+ensure_pnpm_install() {
+  ensure_pnpm_on_path || true
+
+  local install_root="$APP_ROOT"
+  if monorepo="$(monorepo_root_from "$APP_ROOT")"; then
+    install_root="$monorepo"
+    echo "[ci_post_clone] monorepo root: $install_root"
+  else
+    echo "[ci_post_clone] no pnpm-workspace.yaml above $APP_ROOT; installing in app directory only"
+  fi
+
+  cd "$install_root"
+  pnpm_run install --frozen-lockfile || pnpm_run install
+}
+
 ensure_node
-ensure_yarn_install
+ensure_pnpm_install
 
 cd "$IOS_DIR"
 pod install --repo-update

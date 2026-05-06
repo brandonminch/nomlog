@@ -5,10 +5,10 @@
  * src/data/recipes/curated/<slug>.json, then updates manifest.json so the
  * commit step can re-upsert edits back to the database.
  *
- * Usage:
- *   yarn pipeline:pull           — pull all internal recipes
- *   yarn pipeline:pull:develop   — pull from development database
- *   yarn pipeline:pull --source-key internal  — filter by source key (default: internal)
+ * Usage (from monorepo root):
+ *   pnpm --filter nomlog-api run pipeline:pull           — pull all internal recipes
+ *   pnpm --filter nomlog-api run pipeline:pull:develop   — pull from development database
+ *   pnpm --filter nomlog-api run pipeline:pull -- --source-key internal  — filter by source key (default: internal)
  */
 import fs from 'fs';
 import path from 'path';

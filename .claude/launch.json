@@ -3,20 +3,20 @@
   "configurations": [
     {
       "name": "Nomlog API (dev)",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["--cwd", "nomlog-api", "dev:develop"],
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "nomlog-api", "run", "dev:develop"],
       "port": 3001
     },
     {
       "name": "Nomlog App (Expo)",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["--cwd", "nomlog-app", "start"],
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "nomlog-app", "run", "start"],
       "port": 8081
     },
     {
       "name": "Nomlog App (Web)",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["--cwd", "nomlog-app", "web"],
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "nomlog-app", "run", "web"],
       "port": 8081
     }
   ]

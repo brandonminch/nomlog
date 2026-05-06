@@ -23,8 +23,9 @@ Terminal
 PostHog AI
 
 ```bash
-yarn add posthog-react-native @react-native-async-storage/async-storage react-native-device-info react-native-localize
-# or
+# Nomlog monorepo (from repo root):
+pnpm --filter nomlog-app add posthog-react-native @react-native-async-storage/async-storage react-native-device-info react-native-localize
+# or with npm:
 npm i -s posthog-react-native @react-native-async-storage/async-storage react-native-device-info react-native-localize
 ```
 
