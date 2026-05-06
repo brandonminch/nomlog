@@ -12,9 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
+      - uses: pnpm/action-setup@v4 # version from root package.json `packageManager`; omit `with.version` to avoid mismatch errors
 
       - uses: actions/setup-node@v4
         with:
