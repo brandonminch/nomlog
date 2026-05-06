@@ -53,22 +53,26 @@ monorepo_root_from() {
 }
 
 ensure_pnpm_on_path() {
-  if command -v pnpm >/dev/null 2>&1; then
+  if command -v pnpm >/dev/null 2>&1 && pnpm -v >/dev/null 2>&1; then
     echo "[ci_post_clone] pnpm: $(command -v pnpm) ($(pnpm -v))"
     return 0
   fi
 
-  if command -v corepack >/dev/null 2>&1; then
-    corepack enable || true
-    if corepack prepare "pnpm@${PNPM_VERSION}" --activate 2>/dev/null; then
-      echo "[ci_post_clone] pnpm: $(command -v pnpm) ($(pnpm -v))"
-      return 0
-    fi
+  if ! command -v npm >/dev/null 2>&1; then
+    echo "[ci_post_clone] npm not found; cannot install pnpm"
+    return 1
   fi
 
-  if command -v npm >/dev/null 2>&1; then
-    npm install -g "pnpm@${PNPM_VERSION}" || true
-  fi
+  # Do not use Corepack to install pnpm: Node 20.18.x ships Corepack that can
+  # fail "Cannot find matching keyid" against current pnpm release metadata,
+  # leaving a broken pnpm shim and breaking `npm install -g pnpm` (EEXIST).
+  corepack disable >/dev/null 2>&1 || true
+
+  local node_bin
+  node_bin="$(dirname "$(command -v node)")"
+  rm -f "$node_bin/pnpm" "$node_bin/pnpx" 2>/dev/null || true
+
+  npm install -g --no-fund --no-audit "pnpm@${PNPM_VERSION}"
 
   if command -v pnpm >/dev/null 2>&1; then
     echo "[ci_post_clone] pnpm: $(command -v pnpm) ($(pnpm -v))"
